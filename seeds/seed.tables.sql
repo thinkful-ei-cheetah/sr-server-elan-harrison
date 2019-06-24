@@ -28,9 +28,9 @@ VALUES
   (5, 1, 'tradurre', 'translate', 6),
   (6, 1, 'stupefacente', 'amazing', 7),
   (7, 1, 'cane', 'dog', 8),
-  (8, 1, 'gatto', 'cat', 9);
-  (9, 1, 'tomato', 'pomodoro', 10);
-  (10, 1, 'strawberry', 'fragola', null);
+  (8, 1, 'gatto', 'cat', 9),
+  (9, 1, 'pomodoro','tomato', 10),
+  (10, 1, 'fragola','strawberry', null);
 
 
 UPDATE "language" SET head = 1 WHERE id = 1;
