@@ -60,4 +60,34 @@ class LinkedList {
     }
     previousNode = currNode.next
   }
+
+  shiftFirstItem(spaces) {
+    if(!this.head) return null
+    if (!this.head.next) return this.head
+    if(spaces === 0) return
+    let temp = this.head
+    this.head = this.head.next
+    let currNode = this.head
+    let count = 1
+    while(count < spaces) {
+      if(currNode.next === null) {
+        currNode.next = this.head
+      }
+      currNode = currNode.next
+      count++
+    }
+    let tail = currNode.next
+    currNode.next = temp
+    currNode.next.next = tail
+  }
 }
+
+const sll = new LinkedList() // 1 -> 2 -> 3 -> 4 -> 5 => 2 -> 3 -> 1 -> 4 -> 5
+sll.insertLast(1)
+sll.insertLast(2)
+sll.insertLast(3)
+sll.insertLast(4)
+sll.insertLast(5)
+sll.shiftFirstItem(5)
+console.log(sll)
+module.exports = LinkedList

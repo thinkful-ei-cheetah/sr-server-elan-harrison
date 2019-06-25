@@ -79,8 +79,12 @@ languageRouter
       const word = await LanguageService.getWord(
         req.app.get('db'), 
         language.head)
-      if (userAnswer === word[0].original) {
+      const wordList = await LanguageService.createLinkedList(req.app.get('db'), language)
+      if (userAnswer === word[0].translation) {
         word[0].correct_count++
+        if(word[0].memory_value >= 32) {
+          word[0].memory_value = 32
+        }
         word[0].memory_value*2
         language.total_score+=1
         res.json(LanguageService.serializeGuessResponse(

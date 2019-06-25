@@ -1,3 +1,5 @@
+const SLL = require('../../LL')
+
 const LanguageService = {
   getUsersLanguage(db, user_id) {
     return db
@@ -46,7 +48,8 @@ const LanguageService = {
         'original',
         'correct_count',
         'incorrect_count',
-        'memory_value'
+        'memory_value',
+        'translation'
       )
       .where({ id })
   },
@@ -59,6 +62,13 @@ const LanguageService = {
       answer: word.original,
       isCorrect: correct
     }
+  },
+  async createLinkedList(db, language) {
+    const wordList = await this.getLanguageWords(
+    db, language.id)
+    const wordSLL = new SLL()
+    wordList.forEach(word => wordSLL.insertLast(word))
+    return wordSLL
   }
 }
 
