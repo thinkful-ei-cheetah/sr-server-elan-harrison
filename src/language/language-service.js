@@ -45,9 +45,20 @@ const LanguageService = {
         'language_id',
         'original',
         'correct_count',
-        'incorrect_count'
+        'incorrect_count',
+        'memory_value'
       )
       .where({ id })
+  },
+  serializeGuessResponse(word, language, correct) {
+    return {
+      nextWord: language.head,
+      wordCorrectCount: word.correct_count,
+      wordIncorrectCount: word.incorrect_count,
+      totalScore: language.total_score,
+      answer: word.original,
+      isCorrect: correct
+    }
   }
 }
 
