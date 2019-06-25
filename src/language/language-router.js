@@ -50,11 +50,11 @@ languageRouter
         req.app.get('db'),
         req.user.id,
       )
-      const words = await LanguageService.getLanguageWords(
+      const firstWord = await LanguageService.getWord(
         req.app.get('db'),
-        language.id,
+        language.head
       )
-      console.log(words)
+      res.json(LanguageService.serializeWord(firstWord[0], language))
       
       next()
     } catch (error){
