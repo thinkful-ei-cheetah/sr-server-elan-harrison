@@ -54,6 +54,7 @@ languageRouter
         req.app.get('db'),
         language.id,
       )
+      console.log(words)
       
       next()
     } catch (error){
