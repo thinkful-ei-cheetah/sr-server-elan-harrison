@@ -72,7 +72,7 @@ const LanguageService = {
       memory_value,
       incorrect_count,
       next
-    })
+    }).returning('*')
   },
   updateNext(db, id, next){
     return db('word')
@@ -80,6 +80,7 @@ const LanguageService = {
     .update({
       next
     })
+    .returning('*')
   },
   updateScore(db, user_id, total_score, head){
     return db('language')
@@ -88,6 +89,7 @@ const LanguageService = {
         total_score,
         head
       })
+      .returning('*')
   }
 }
 
