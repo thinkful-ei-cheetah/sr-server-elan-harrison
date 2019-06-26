@@ -46,7 +46,8 @@ const LanguageService = {
         'original',
         'correct_count',
         'incorrect_count',
-        'memory_value'
+        'memory_value',
+        'translation'
       )
       .where({ id })
   },
@@ -59,6 +60,15 @@ const LanguageService = {
       answer: word.original,
       isCorrect: correct
     }
+  },
+  updateWord(db, id, correct_count, incorrect_count, memory_value){
+    return db('word')
+    .where({ id })
+    .update({
+      correct_count,
+      memory_value,
+      incorrect_count
+    })
   }
 }
 

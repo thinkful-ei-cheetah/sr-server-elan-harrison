@@ -1,7 +1,7 @@
 const express = require('express')
 const LanguageService = require('./language-service')
 const { requireAuth } = require('../middleware/jwt-auth')
-
+const LinkedList = require('./Linked-List')
 const languageRouter = express.Router()
 const jsonBodyParser = express.json()
 
@@ -74,26 +74,68 @@ languageRouter
     try {
       const language = await LanguageService.getUsersLanguage(
         req.app.get('db'),
-        req.user.id,
+        req.user.id
       )
       const word = await LanguageService.getWord(
-        req.app.get('db'), 
-        language.head)
-      if (userAnswer === word[0].original) {
-        word[0].correct_count++
-        word[0].memory_value*2
-        language.total_score+=1
-        res.json(LanguageService.serializeGuessResponse(
-          word[0], language, true
-        ))
-      } else {
-        word[0].incorrect_count++
-        word[0].memory_value = 1
-        language.total_score--
-        res.json(LanguageService.serializeGuessResponse(
-          word[0], language, false
-        ))
+        req.app.get('db'),
+        language.head
+      )
+      let memory_value = word[0].memory_value*2
+      if (memory_value>32){
+        memory_value=32
       }
+      
+      let correct_count= word[0].correct_count
+      let incorrect_count=word[0].incorrect_count
+      let total_score = language.total_score
+      if (userAnswer === word[0].translation){
+        correct_count++
+        total_score++
+      }
+      else {
+        incorrect_count++
+        total_score--
+        memory_value=1
+      }
+      let db = req.app.get('db')
+      LanguageService.updateWord(db, language.head, correct_count, incorrect_count, memory_value)
+      .then(() => {
+        return LanguageService.getLanguageWords(db, req.user.id)
+      }).then( words => {
+        let idx = words.findIndex(word => {
+          word.id == language.head
+        })
+        let output=[]
+        for (let i = idx;i<=words.length; i++){
+          output.push(words.find(w => w.id===i))
+      }
+      
+      for (let j =0; j<idx; j++){
+          output.push(words.find(w =>w.id===j))
+      }
+      
+      const sll = new LinkedList
+      output.forEach(w =>{
+        if (w){
+        sll.insertValue(w)
+        }
+      })
+      sll.findNextValue()
+      return sll.findNextValue()
+      })
+      .then(id => {
+       db('language')
+        .where({ id : req.user.id })
+        .update({
+        total_score,
+        head:id
+      })
+      })  
+      res.json({
+        total_score,
+        correct_count,
+        incorrect_count
+      })
       next()
     } catch (error) {
       next(error)
