@@ -3,9 +3,9 @@ require('dotenv').config()
 const knex = require('knex')
 const app = require('./app')
 const { PORT, DB_URL } = require('./config')
-var pg = require('pg');
+// var pg = require('pg');
 
-pg.defaults.ssl = true;
+// pg.defaults.ssl = true;
 
 const db = knex({
   client: 'pg',
