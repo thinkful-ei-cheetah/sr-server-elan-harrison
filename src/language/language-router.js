@@ -159,6 +159,8 @@ languageRouter
         req.app.get('db'),
         language.head
       )
+      
+      
       let memory_value = word[0].memory_value*2
       if (memory_value>16){
         memory_value=16
@@ -184,9 +186,11 @@ languageRouter
           words.forEach(w => nums=nums.filter(a => a!=w.next))
           a.next = nums[0]
         }
-        let next = a.next
+        let nextId = a.next
         let M = a.memory_value
-        let tmpNode = words.find(word => word.id == next)
+        let tmpNode = words.find(word => word.id == nextId)
+        let tmpId
+        let tmpNext
         if (M!==16){
           for (let i =0; i<M; i++){
             if (tmpNode.next ===null){
@@ -194,28 +198,51 @@ languageRouter
               words.forEach(w => nums=nums.filter(a => a!=w.next))
               tmpNode.next = nums[0]
             }
-            let tmpId = tmpNode.id
-            let tmpNext = tmpNode.next
+            tmpId = tmpNode.id
+            tmpNext = tmpNode.next
             tmpNode = words.find(word => word.id == tmpNext)
           }
           if (memory_value==6){
+            tmpId = tmpNode.id
+            tmpNext = tmpNode.next
             memory_value=16
+            
           }
-          LanguageService.updateNext(db, tmpId, language.head)
-          LanguageService.updateWord(db, language.head, correct_count, incorrect_count, memory_value, tmpNext)
+          LanguageService.updateNext(db, tmpId, language.head).then()
+          LanguageService.updateWord(db, language.head, correct_count, incorrect_count, memory_value, tmpNext).then()
         }
         else{
           M=6
-          LanguageService.updateWord(db, language.head, correct_count, incorrect_count, M, word[0].next)
+          LanguageService.updateWord(db, language.head, correct_count, incorrect_count, M, word[0].next).then()
         }
         
       })
-      LanguageService.updateScore(db, req.user.id, total_score, head)
+      
+      
+      let word2 = await LanguageService.getWord(
+        req.app.get('db'),
+        word[0].next
+        )
+        let nextWord = word2[0].original
+        db('language')
+        .where({ user_id: req.user.id })
+        .update({
+          total_score,
+          head: word2[0].id
+        })
+        .then(()=>{
+          console.log('updated score')
+        })
+      
+
 
       res.json({
-        total_score,
-        correct_count,
-        incorrect_count
+        totalScore: total_score,
+        wordCorrectCount: correct_count,
+        wordIncorrectCount: incorrect_count,
+        answer: word[0].translation,
+        isCorrect: userAnswer === word[0].translation,
+        nextWord
       })
 
       next()
