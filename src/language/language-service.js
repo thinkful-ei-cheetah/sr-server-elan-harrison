@@ -63,12 +63,30 @@ const LanguageService = {
       isCorrect: correct
     }
   },
-  async createLinkedList(db, language) {
-    const wordList = await this.getLanguageWords(
-    db, language.id)
-    const wordSLL = new SLL()
-    wordList.forEach(word => wordSLL.insertLast(word))
-    return wordSLL
+  updateWord(db, id, correct_count, incorrect_count, memory_value,next){
+    return db('word')
+    .where({ id })
+    .update({
+      correct_count,
+      memory_value,
+      incorrect_count,
+      next
+    })
+  },
+  updateNext(db, id, next){
+    return db('word')
+    .where({ id })
+    .update({
+      next
+    })
+  },
+  updateScore(db, user_id, total_score, head){
+    return db('language')
+      .where({ user_id })
+      .update({
+        total_score,
+        head
+      })
   }
 }
 
