@@ -49,7 +49,8 @@ const LanguageService = {
         'correct_count',
         'incorrect_count',
         'memory_value',
-        'translation'
+        'translation',
+        'next'
       )
       .where({ id })
   },
