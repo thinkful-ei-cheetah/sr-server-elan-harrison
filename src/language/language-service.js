@@ -1,3 +1,5 @@
+const SLL = require('../../LL')
+
 const LanguageService = {
   getUsersLanguage(db, user_id) {
     return db
@@ -46,7 +48,9 @@ const LanguageService = {
         'original',
         'correct_count',
         'incorrect_count',
-        'memory_value'
+        'memory_value',
+        'translation',
+        'next'
       )
       .where({ id })
   },
@@ -59,6 +63,33 @@ const LanguageService = {
       answer: word.original,
       isCorrect: correct
     }
+  },
+  updateWord(db, id, correct_count, incorrect_count, memory_value,next){
+    return db('word')
+    .where({ id })
+    .update({
+      correct_count,
+      memory_value,
+      incorrect_count,
+      next
+    }).returning('*')
+  },
+  updateNext(db, id, next){
+    return db('word')
+    .where({ id })
+    .update({
+      next
+    })
+    .returning('*')
+  },
+  updateScore(db, user_id, total_score, head){
+    return db('language')
+      .where({ user_id })
+      .update({
+        total_score,
+        head
+      })
+      .returning('*')
   }
 }
 
