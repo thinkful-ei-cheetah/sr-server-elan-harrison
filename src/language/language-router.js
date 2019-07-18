@@ -202,7 +202,6 @@ languageRouter
         let tmpNext =a.next
         
         for (let i = 0; i<M; i++){
-          console.log(tmpId, tmpNext)
           if (tmpNode.next===null){
             let odx = tmpNode.id-words.length
             let nums = [odx+1,odx+2,odx+3,odx+4,odx+5,odx+6,odx+7,odx+8,odx+9,odx+10]

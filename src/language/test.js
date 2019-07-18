@@ -7,6 +7,3 @@ for (let i =3; i<a.length; i++){
 for (let i =0; i<3; i++){
     output.push(a[i])
 }
-console.log(a.indexOf(4))
-console.log(output)
-console.log(b.findIndex(w => w.a==2))

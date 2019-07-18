@@ -89,5 +89,4 @@ sll.insertLast(3)
 sll.insertLast(4)
 sll.insertLast(5)
 sll.shiftFirstItem(5)
-console.log(sll)
 module.exports = LinkedList
